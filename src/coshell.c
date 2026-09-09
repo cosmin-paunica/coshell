@@ -100,6 +100,22 @@ int launch(char **args)
     return 1;
 }
 
+int execute(char **args)
+{
+    if (args[0] == NULL) {
+        return 1;
+    }
+
+    int i;
+    for (i = 0; i < num_builtins; i++) {
+        if (strcmp(args[0], builtin_strs[i]) == 0) {
+            return (*builtins[i])(args);
+        }
+    }
+
+    return launch(args);
+}
+
 void loop()
 {
     char *line;
@@ -112,7 +128,7 @@ void loop()
         line = read_line();
         args = parse_line(line);
 
-        status = launch(args);
+        status = execute(args);
 
         free(line);
         free(args);
